@@ -1,0 +1,33 @@
+version: "3.8"
+
+services:
+
+  mariadb:
+    build: ./mariadb
+    container_name: mariadb-container
+    networks:
+      - prum_indstr
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: mydb
+      MYSQL_USER: user123
+      MYSQL_PASSWORD: pass123
+
+  python_app:
+    build: ./python_app
+    container_name: python-container
+    networks:
+      - prum_indstr
+    environment:
+      DB_HOST: mariadb-container
+      DB_USER: user123
+      DB_PASSWORD: pass123
+      DB_NAME: mydb
+    depends_on:
+      - mariadb
+
+networks:
+  prum_indstr:
+    external: true
